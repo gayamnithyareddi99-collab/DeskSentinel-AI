@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeskSentinel AI | Identity Governance & Social Engineering Defence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --navy:#0A1628;--navy-mid:#0D1F3C;--navy-deep:#060F1E;--navy-card:#0F2040;
+  --cyan:#00D4FF;--cyan-dim:#00AACF;--cyan-glow:rgba(0,212,255,0.18);
+  --electric:#1A6BFF;--electric-dim:#1458D4;
+  --green:#00E5A0;
+  --nav-bg:#0A1628;--footer-bg:#060F1E;
+  --bg-white:#F0F6FF;--bg-light:#E4EFFF;--bg-section:#D8E8FF;
+  --card-border:rgba(0,212,255,0.15);
+  --text-dark:#060F1E;--text-mid:#1A3055;--text-muted:#3D5580;--text-light:#6B85BC;--white:#FFFFFF;
+  --nav-h:72px;--max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;--display:'Sora',sans-serif;--mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);--ease-out:cubic-bezier(0,0,0.2,1);
+}
+body{font-family:var(--font);color:var(--text-dark);background:var(--bg-white);overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg-light);}::-webkit-scrollbar-thumb{background:var(--cyan-dim);border-radius:2px;}
+img{display:block;max-width:100%;}
+
+/* NAV */
+.navbar{position:fixed;top:0;left:0;width:100%;height:var(--nav-h);background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,212,255,0.2);z-index:1000;display:flex;align-items:center;padding:0 clamp(16px,5vw,60px);justify-content:space-between;box-shadow:0 2px 24px rgba(0,0,0,0.6);}
+.nav-logo{font-family:var(--display);font-size:18px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;flex-shrink:0;}
+.nav-logo-icon{width:40px;height:40px;background:rgba(0,212,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 14px rgba(0,212,255,0.3);border:1px solid rgba(0,212,255,0.4);}
+.nav-logo-icon svg{width:22px;height:22px;fill:none;stroke:#00D4FF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:rgba(0,212,255,0.8);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{background:none;border:none;color:rgba(255,255,255,0.85);font-size:11px;font-weight:600;padding:8px 13px;border-radius:7px;transition:all .22s var(--ease);cursor:pointer;font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;position:relative;white-space:nowrap;}
+.nav-links li button:hover{color:#fff;background:rgba(0,212,255,0.12);}
+.nav-links li button.active{color:#00D4FF;background:rgba(0,212,255,0.1);}
+.nav-links li button.active::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:14px;height:2px;background:var(--cyan);border-radius:2px;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{background:linear-gradient(135deg,var(--cyan),var(--electric));color:var(--navy);border:none;padding:9px 20px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .22s;font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;box-shadow:0 2px 10px rgba(0,212,255,0.4);}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,212,255,0.6);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:#00D4FF;border-radius:2px;transition:.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-nav{display:none;position:fixed;top:var(--nav-h);left:0;width:100%;background:var(--navy-deep);padding:12px 20px 20px;flex-direction:column;gap:2px;z-index:999;border-bottom:1px solid rgba(0,212,255,0.2);animation:slideDown .25s var(--ease-out);}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{background:none;border:none;color:rgba(255,255,255,.8);font-size:13px;font-weight:600;padding:13px 12px;border-bottom:1px solid rgba(0,212,255,.1);cursor:pointer;font-family:var(--mono);text-align:left;text-transform:uppercase;letter-spacing:1px;transition:color .2s,background .2s;border-radius:6px;}
+.mobile-nav button:hover{color:#00D4FF;background:rgba(0,212,255,.08);}
+.mobile-nav .mob-cta{margin-top:8px;background:linear-gradient(135deg,var(--cyan),var(--electric));color:var(--navy);border:none;padding:13px;border-radius:8px;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--mono);}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn .35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* UTILITY */
+.label-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:14px;}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--electric);}
+.label-tag-w{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(0,212,255,.9);margin-bottom:14px;}
+.label-tag-w::before{content:'';width:20px;height:1px;background:rgba(0,212,255,.6);}
+.section-h2{font-family:var(--display);font-size:clamp(26px,3.5vw,50px);font-weight:800;line-height:1.1;letter-spacing:-.8px;margin-bottom:10px;}
+.h2-dark{color:var(--text-dark);}
+.h2-white{color:#fff;}
+.divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.div-cyan{background:linear-gradient(90deg,var(--cyan),transparent);}
+.div-white{background:linear-gradient(90deg,rgba(0,212,255,.8),transparent);}
+.para-d{color:var(--text-mid);line-height:1.85;font-size:16px;}
+.para-w{color:rgba(255,255,255,.85);line-height:1.85;font-size:16px;}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--electric),var(--navy-mid));color:#fff;padding:13px 28px;border-radius:8px;font-weight:700;font-size:12px;letter-spacing:.8px;text-transform:uppercase;transition:all .25s;font-family:var(--mono);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(26,107,255,.4);}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,255,.5);}
+.btn-s{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--cyan);color:var(--navy);padding:12px 28px;border-radius:8px;font-weight:700;font-size:12px;letter-spacing:.8px;text-transform:uppercase;transition:all .25s;font-family:var(--mono);background:none;cursor:pointer;}
+.btn-s:hover{background:rgba(0,212,255,.1);}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;font-family:var(--mono);}
+.badge-c{background:rgba(0,212,255,.1);color:var(--electric-dim);border:1px solid rgba(0,212,255,.28);}
+.badge-g{background:rgba(0,229,160,.1);color:#00A873;border:1px solid rgba(0,229,160,.25);}
+.bdot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* HERO */
+.hero{background:linear-gradient(140deg,#E4EFFF 0%,#D0E3FF 40%,#B8D4FF 100%);padding:clamp(60px,10vw,100px) 0 clamp(50px,8vw,80px);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,255,.1) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(26,107,255,.08) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.35);border-radius:30px;padding:6px 16px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--navy);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:22px;}
+.hero-bdot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+h1{font-family:var(--display);font-size:clamp(32px,5vw,62px);font-weight:800;line-height:1.06;letter-spacing:-1.5px;color:var(--text-dark);margin-bottom:6px;}
+h1 .cyan{color:var(--electric);}
+.hero-rule{width:48px;height:3px;background:linear-gradient(90deg,var(--cyan),var(--electric));border-radius:2px;margin:20px 0;}
+.hero-body{font-size:16px;color:var(--text-mid);line-height:1.8;margin-bottom:28px;max-width:540px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+
+/* DASHBOARD CARD */
+.dash-card{background:#fff;border-radius:18px;border:1px solid rgba(0,212,255,.25);padding:24px;box-shadow:0 8px 40px rgba(10,22,40,.15);}
+.dash-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.dash-lbl{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
+.dash-title{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);}
+.live-wrap{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--cyan-dim);letter-spacing:1.5px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);animation:pulse 1.5s infinite;}
+.score-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(10,22,40,.06);}
+.s-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:700;flex-shrink:0;}
+.si-c{background:rgba(0,212,255,.12);color:var(--electric-dim);}
+.si-g{background:rgba(0,229,160,.1);color:#00A873;}
+.si-e{background:rgba(26,107,255,.1);color:var(--navy);}
+.score-lbl{flex:1;font-size:12px;color:var(--text-muted);}
+.score-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text-dark);}
+.score-big{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px;background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(26,107,255,.1));border-radius:12px;border:1px solid rgba(0,212,255,.18);}
+.sb-num{font-family:var(--display);font-size:46px;font-weight:800;color:var(--electric);line-height:1;}
+.sb-info .lbl{font-size:13px;font-weight:700;color:var(--text-dark);}
+.sb-info .sub{font-size:11px;color:var(--text-muted);margin-top:3px;font-family:var(--mono);}
+
+/* DARK SECTION */
+.sec-dark{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);padding:clamp(60px,8vw,96px) 0;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;}
+.stat-card{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:16px;padding:clamp(20px,3vw,30px);text-align:center;transition:transform .25s,border-color .25s;}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,.5);}
+.stat-num{font-family:var(--display);font-size:clamp(30px,4vw,46px);font-weight:800;color:#00D4FF;margin-bottom:10px;}
+.stat-lbl{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;}
+
+/* PLATFORM CARDS */
+.sec-light{background:var(--bg-white);padding:clamp(60px,8vw,96px) 0;}
+.sec-alt{background:var(--bg-light);padding:clamp(60px,8vw,96px) 0;}
+.plat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+.plat-card{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;box-shadow:0 2px 12px rgba(10,22,40,.06);}
+.plat-card:hover{border-color:rgba(0,212,255,.45);box-shadow:0 12px 40px rgba(0,212,255,.12);transform:translateY(-3px);}
+.plat-img{width:100%;height:180px;overflow:hidden;background:linear-gradient(135deg,var(--navy),var(--navy-mid));}
+.plat-img img{width:100%;height:100%;object-fit:cover;opacity:.85;}
+.plat-inner{padding:22px;}
+.el-badge{display:inline-block;background:rgba(0,212,255,.1);color:var(--electric-dim);border-radius:6px;padding:3px 10px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;border:1px solid rgba(0,212,255,.22);}
+.plat-card h3{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:10px;line-height:1.3;}
+.plat-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+.more-txt{display:none;font-size:13px;color:var(--text-muted);line-height:1.75;margin-top:10px;padding-top:10px;border-top:1px solid rgba(10,22,40,.08);}
+.plat-card.open .more-txt{display:block;}
+.expand-btn{margin-top:16px;background:none;border:1px solid rgba(10,22,40,.2);color:var(--electric-dim);padding:7px 18px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--mono);letter-spacing:.8px;text-transform:uppercase;transition:all .2s;}
+.expand-btn:hover{background:rgba(0,212,255,.08);border-color:var(--cyan);}
+
+/* WHY CARDS */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;}
+.why-card{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:16px;padding:clamp(20px,3vw,30px);transition:border-color .25s,box-shadow .25s;}
+.why-card:hover{border-color:rgba(0,212,255,.4);box-shadow:0 8px 28px rgba(0,212,255,.1);}
+.why-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(26,107,255,.1));display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;color:var(--cyan-dim);border:1px solid rgba(0,212,255,.25);}
+.why-card h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.why-card p{font-size:13px;color:var(--text-muted);line-height:1.75;}
+
+/* CHARTS */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:44px;}
+.chart-card{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:24px;box-shadow:0 4px 16px rgba(10,22,40,.06);}
+.chart-card h4{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px;}
+.chart-card p{font-size:12px;color:var(--text-muted);margin-bottom:20px;font-family:var(--mono);}
+.chart-wrap{height:260px;position:relative;}
+
+/* PROCESS */
+.process-step{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,72px);align-items:center;margin-bottom:clamp(56px,8vw,96px);}
+.process-step:last-child{margin-bottom:0;}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:12px;}
+.step-h3{font-family:var(--display);font-size:clamp(22px,2.5vw,30px);font-weight:800;color:var(--text-dark);margin-bottom:16px;line-height:1.2;}
+.step-p{color:var(--text-muted);font-size:15px;line-height:1.8;margin-bottom:18px;}
+.step-img{width:100%;aspect-ratio:16/10;border-radius:16px;border:1px solid rgba(0,212,255,.22);overflow:hidden;box-shadow:0 8px 32px rgba(10,22,40,.12);}
+.step-img img{width:100%;height:100%;object-fit:cover;}
+
+/* FAQ */
+.faq-wrap{display:flex;flex-direction:column;gap:12px;margin-top:32px;}
+.faq-item{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:14px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;gap:16px;}
+.faq-q h4{font-family:var(--display);font-size:15px;font-weight:600;color:var(--text-dark);}
+.faq-icon{font-size:22px;font-weight:300;color:var(--electric);flex-shrink:0;transition:transform .3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{display:none;padding:0 22px 18px;font-size:14px;color:var(--text-muted);line-height:1.8;border-top:1px solid rgba(10,22,40,.06);}
+.faq-item.open .faq-body{display:block;}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:44px;}
+.price-card{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:clamp(22px,3vw,36px);position:relative;transition:border-color .25s,box-shadow .25s,transform .25s;box-shadow:0 4px 16px rgba(10,22,40,.06);}
+.price-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,212,255,.15);}
+.price-card.featured{border:2px solid var(--cyan);box-shadow:0 8px 40px rgba(0,212,255,.22);transform:scale(1.03);}
+.price-card.featured:hover{transform:scale(1.03) translateY(-4px);}
+.feat-lbl{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--cyan),var(--electric));color:var(--navy);padding:4px 18px;border-radius:20px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+.price-tier{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:8px;}
+.price-title{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px;}
+.price-amount{font-family:var(--display);font-size:clamp(32px,4vw,46px);font-weight:800;color:var(--navy);line-height:1;}
+.price-amount span{font-size:16px;font-weight:500;color:var(--text-muted);}
+.price-desc{font-size:13px;color:var(--text-muted);margin:12px 0 20px;line-height:1.6;}
+.price-feat{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.price-feat li{font-size:13px;color:var(--text-mid);display:flex;align-items:flex-start;gap:8px;}
+.price-feat li::before{content:'✓';color:var(--electric);font-weight:700;flex-shrink:0;}
+
+/* CONTACT */
+.contact-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);padding:clamp(60px,8vw,96px) 0;}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:44px;}
+.contact-form{background:#fff;border-radius:18px;padding:clamp(24px,4vw,40px);box-shadow:0 8px 40px rgba(0,0,0,.15);}
+.form-group{margin-bottom:20px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text-dark);margin-bottom:8px;font-family:var(--mono);letter-spacing:.5px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(10,22,40,.15);border-radius:10px;font-size:14px;font-family:var(--font);color:var(--text-dark);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.1);}
+.form-group textarea{resize:vertical;min-height:120px;}
+.contact-info h3{font-family:var(--display);font-size:22px;font-weight:700;color:#fff;margin-bottom:16px;}
+.contact-info .sub{font-size:15px;color:rgba(255,255,255,.75);line-height:1.7;margin-bottom:28px;}
+.c-detail{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1);}
+.c-detail .ic{width:44px;height:44px;background:rgba(0,212,255,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--cyan);flex-shrink:0;font-size:18px;}
+.c-detail strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.c-detail span{font-size:13px;color:rgba(255,255,255,.65);}
+
+/* COMP TABLE */
+.comp-wrap{overflow-x:auto;margin-top:32px;border-radius:14px;border:1px solid rgba(10,22,40,.1);}
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.comp-table thead th{background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:#fff;padding:14px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.8px;text-transform:uppercase;text-align:left;white-space:nowrap;}
+.comp-table thead th.hi{background:linear-gradient(135deg,var(--cyan),var(--electric));color:var(--navy);}
+.comp-table tbody tr:nth-child(even){background:var(--bg-light);}
+.comp-table tbody td{padding:12px 16px;color:var(--text-muted);border-bottom:1px solid rgba(10,22,40,.05);}
+.comp-table tbody td:first-child{font-weight:600;color:var(--text-dark);}
+.comp-table td.hi{background:rgba(0,212,255,.05);}
+.comp-table td.yes{color:#00A873;font-weight:700;}
+.comp-table td.no{color:var(--text-light);}
+
+/* ABOUT HERO */
+.about-hero{background:linear-gradient(140deg,#D0E3FF 0%,#B8D4FF 60%,#9EC4FF 100%);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,80px);position:relative;overflow:hidden;}
+
+/* FOOTER */
+footer{background:var(--footer-bg);border-top:1px solid rgba(0,212,255,.12);padding:clamp(50px,7vw,80px) 0 24px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+.f-brand{font-family:var(--display);font-size:22px;font-weight:800;color:#fff;margin-bottom:16px;}
+.f-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.9;max-width:320px;}
+.f-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.f-badge{background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:9px;color:rgba(0,212,255,.8);letter-spacing:.5px;}
+.f-col-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(0,212,255,.7);margin-bottom:18px;}
+.f-col{display:flex;flex-direction:column;gap:10px;}
+.f-col a{font-size:13px;color:rgba(255,255,255,.55);cursor:pointer;transition:color .2s;text-decoration:none;}
+.f-col a:hover{color:#00D4FF;}
+.footer-bar{border-top:1px solid rgba(0,212,255,.1);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.footer-bar p{font-size:12px;color:rgba(255,255,255,.35);font-family:var(--mono);}
+.footer-bar p span{color:rgba(0,212,255,.6);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:11px;color:rgba(255,255,255,.35);cursor:pointer;text-decoration:none;font-family:var(--mono);transition:color .2s;}
+.footer-links a:hover{color:#00D4FF;}
+
+/* ADDONS */
+.addons-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.addon-card{background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:16px;padding:28px;display:flex;gap:20px;}
+.addon-icon{width:52px;height:52px;border-radius:12px;background:rgba(0,212,255,.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-dim);font-size:22px;flex-shrink:0;border:1px solid rgba(0,212,255,.22);}
+.addon-card h4{font-family:var(--display);font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:6px;}
+.addon-card p{font-size:13px;color:var(--text-muted);line-height:1.7;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav-links{display:none;}.hamburger{display:flex;}
+  .hero-inner{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .plat-grid{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr 1fr;}
+  .pricing-grid{grid-template-columns:1fr;}.price-card.featured{transform:scale(1);}
+  .process-step{grid-template-columns:1fr;gap:28px;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .addons-grid{grid-template-columns:1fr;}
+  .tw{grid-template-columns:1fr!important;}
+}
+@media(max-width:600px){
+  .why-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="nav-logo" onclick="showPage('home')">
+  <div class="nav-logo-text">
+    DeskSentinel AI
+    <span>Detect · Clarify · Secure · 2026</span>
+  </div>
+</a>
+  <ul class="nav-links">
+    <li><button id="nav-home" onclick="showPage('home')" class="active">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-process" onclick="showPage('process')">Process</button></li>
+    <li><button id="nav-faq" onclick="showPage('faq')">FAQ</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Request Demo</button>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMob()">Home</button>
+  <button onclick="showPage('about');closeMob()">About</button>
+  <button onclick="showPage('platform');closeMob()">Platform</button>
+  <button onclick="showPage('market');closeMob()">Market</button>
+  <button onclick="showPage('process');closeMob()">Process</button>
+  <button onclick="showPage('faq');closeMob()">FAQ</button>
+  <button onclick="showPage('pricing');closeMob()">Pricing</button>
+  <button onclick="showPage('contact');closeMob()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMob()">Request Demo →</button>
+</div>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div class="page active" id="page-home">
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="hero-bdot"></span>UK Cybersecurity · Identity Governance · 2026</div>
+      <h1>Detect.<br><span class="cyan">Clarify.</span> Secure.</h1>
+      <div class="hero-rule"></div>
+      <p class="hero-body">DeskSentinel AI is the UK's AI-driven Identity Governance &amp; Social Engineering Defence Platform  transforming vulnerable IT service desks into proactive identity fortresses that intercept vishing, MFA bypass, and account takeover attempts before they breach your organisation.</p>
+      <div class="hero-btns">
+        <button class="btn-p" onclick="showPage('contact')">Book a Platform Demo</button>
+        <button class="btn-s" onclick="showPage('platform')">Explore Platform</button>
+      </div>
+    </div>
+    <div>
+      <div class="dash-card">
+        <div class="dash-top">
+          <div><div class="dash-lbl">DeskSentinel AI · Live Engine</div><div class="dash-title">Identity Security Command Centre</div></div>
+          <div class="live-wrap"><span class="live-dot"></span>LIVE</div>
+        </div>
+        <div class="score-row"><div class="s-icon si-c">RS</div><span class="score-lbl">Risk Score  Current Request</span><span class="score-val">LOW ↓ 92%</span></div>
+        <div class="score-row"><div class="s-icon si-g">SE</div><span class="score-lbl">Social Engineering Attempts Blocked</span><span class="score-val">312 ↑ Today</span></div>
+        <div class="score-row"><div class="s-icon si-e">MFA</div><span class="score-lbl">Unauthorised MFA Resets Prevented</span><span class="score-val">47 ↓ 18%</span></div>
+        <div class="score-row"><div class="s-icon si-c">VT</div><span class="score-lbl">Verification Tax Saved</span><span class="score-val">3.2 hrs/day</span></div>
+        <div class="score-big">
+          <div class="sb-num">90<span style="font-size:22px">%+</span></div>
+          <div class="sb-info"><div class="lbl">Productivity Visibility Improvement</div><div class="sub">Pre-Fulfilment Governance Engine · ↑28% vs Manual</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">The UK Service-Desk Attack Surface</div>
+    <h2 class="section-h2 h2-white">UK Helpdesks Are Losing Millions to Social Engineering &amp; Identity Manipulation.</h2>
+    <div class="divider div-white"></div>
+    <p class="para-w" style="max-width:760px">80%+ of UK businesses have adopted Zero Trust, yet remain vulnerable because threat actors  using vishing and MFA bypass tactics like the Scattered Spider group  manipulate helpdesk agents into authorising unauthorised identity changes. DeskSentinel AI is the pre-fulfilment governance layer that eliminates this critical gap.</p>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">90%+</div><div class="stat-lbl">Improvement in productivity visibility after DeskSentinel AI deployment across UK pilot firms</div></div>
+      <div class="stat-card"><div class="stat-num">442%</div><div class="stat-lbl">Surge in vishing attacks targeting UK IT helpdesks  making manual verification dangerously obsolete</div></div>
+      <div class="stat-card"><div class="stat-num">36%</div><div class="stat-lbl">Of all UK cyber incidents now begin with social engineering, not technical exploits  helpdesks are the front line</div></div>
+      <div class="stat-card"><div class="stat-num">£1T+</div><div class="stat-lbl">Global annual losses from online scams and account takeovers facilitated through IT helpdesk social engineering</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-light">
+  <div class="container">
+    <div class="label-tag">Core Security Modules</div>
+    <h2 class="section-h2 h2-dark">Five Modules. One Complete Identity Governance Platform.</h2>
+    <div class="divider div-cyan"></div>
+    <p class="para-d" style="max-width:760px;margin-bottom:44px">DeskSentinel AI combines pre-fulfilment risk scoring, AI clarification of coercive chat, automated refusal summary intent generation, verification-state compliance graphing, and federated threat benchmarking  all in one unified SaaS platform built specifically for UK SMEs, MSPs, and professional service firms.</p>
+    <div class="plat-grid">
+      <div class="plat-card">
+        <div class="plat-img"><img src="D1.jpg" alt="Identity Risk Scoring"></div>
+        <div class="plat-inner"><div class="el-badge">Module 01</div><h3>Pre-Fulfilment Identity-Risk Scoring Engine</h3><p>Leverages ML to fingerprint behavioural baselines of normal user requests, scoring live interactions for social-engineering indicators  urgency tone, executive impersonation, MFA fatigue  before sensitive actions are permitted.</p><div class="more-txt">Unlike static rule-based triggers, this engine calculates a dynamic risk score for every identity-sensitive request (e.g., MFA reset or password change) before execution. It synthesises ticket content, requester behavioural baselines, and historical workflow data to identify anomalies in real-time, blocking unauthorised requests before the attack surface can be exploited. Specific Scattered Spider vishing tactics, urgency tone, and MFA fatigue triggers are automatically detected and flagged.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+      <div class="plat-card">
+        <div class="plat-img"><img src="D2.jpg" alt="AI Clarification Engine"></div>
+        <div class="plat-inner"><div class="el-badge">Module 02</div><h3>AI Clarification &amp; Refusal Summary Intent Engine</h3><p>Automatically detects the true intent behind coercive or manipulative requests  translating unstructured helpdesk chat into real-time operational risk conditions with actionable, auto-generated refusal summaries for agents.</p><div class="more-txt">When a threat actor submits a complex or coercive support request, the platform automatically clarifies the true intent, properly gauges the request complexity, and decomposes it into a structured, multi-step verification workflow  without manual agent guesswork. The system identifies precisely where a security workflow breaks down and provides actionable refusal summaries, enabling agents to safely and professionally deny fraudulent requests while maintaining strict NCSC and GDPR compliance at all times.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+      <div class="plat-card">
+        <div class="plat-img"><img src="D3.jpg" alt="Verification State Graph"></div>
+        <div class="plat-inner"><div class="el-badge">Module 03</div><h3>Verification-State Compliance Graph</h3><p>Continuously evaluates whether sufficient verified evidence exists to safely authorise the requested identity change  identifying exactly where a workflow breaks down before sensitive actions are executed.</p><div class="more-txt">This proprietary capability maps the entire identity verification chain as a live trust-state model. The graph identifies precisely where compliance breaks  bypassed manager approvals, lack of registered-device confirmation, or procedural abuse  and provides agents with the structured evidence they need to refuse safely. Every node in the verification graph is linked directly to the identity-security consequence of the requested action, ensuring no step can be skipped under pressure.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+      <div class="plat-card">
+        <div class="plat-img"><img src="D4.jpg" alt="Forensic Evidence Logger"></div>
+        <div class="plat-inner"><div class="el-badge">Module 04</div><h3>Forensic Evidence Logger &amp; Compliance Reporting</h3><p>Generates audit-ready reports connecting DeskSentinel AI interventions to prevented financial loss and mitigated breach risks  ensuring full ICO, NCSC Zero Trust, and UK GDPR compliance with forensic precision.</p><div class="more-txt">The Evidence Logger produces detailed reports connecting individual DeskSentinel AI interventions to prevented financial loss and mitigated breach risks, providing business owners with the same strategic "identity risk" intelligence used by multinational enterprises. Every intervention, clarification, and refusal is logged with high-fidelity evidence to meet strict NCSC and ICO compliance standards  generating audit-ready forensic trails for every identity-sensitive change automatically.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+      <div class="plat-card">
+        <div class="plat-img"><img src="D5.jpg" alt="Community Security Network"></div>
+        <div class="plat-inner"><div class="el-badge">Module 05</div><h3>Community Security Network (CSN)  Federated Threat Benchmarking</h3><p>Federated learning architecture enabling sharing of anonymised manipulation indicators across UK firms  so every SME benefits from collective regional threat intelligence without exposing private corporate data.</p><div class="more-txt">The CSN uses federated learning to enable sharing of anonymous manipulation indicators and social-engineering attack patterns across UK service firms. Each SME leverages regional threat intelligence without revealing private corporate data. Social-engineering trends from successful account-takeover attempts against London-based MSPs can instantly improve pre-fulfilment defences of small professional firms in Manchester  creating a collective intelligence ecosystem that new cybersecurity players would have to build from scratch over years of operation.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+      <div class="plat-card">
+        <div class="plat-img"><img src="D6.jpg" alt="ITSM Integration"></div>
+        <div class="plat-inner"><div class="el-badge">Module 06</div><h3>ITSM-Agnostic Integration Suite</h3><p>Plug-and-play API platform built to overlay dominant UK business tools  ServiceNow, Jira Service Management, Microsoft Entra ID, Okta  minimising onboarding friction without vendor lock-in.</p><div class="more-txt">DeskSentinel AI sits as a governance layer above existing ITSM platforms and IAM tools, ensuring businesses aren't locked into a single provider as their technology stack evolves. The unified integration suite reduces onboarding time from weeks to hours once initial integrations are established at a pilot firm. Once the first ServiceNow and Jira integrations are stabilised, the configuration template is standardised  making the onboarding cost of subsequent professional support teams very low across all plan tiers.</div><button class="expand-btn" onclick="toggleCard(this)">Learn More</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-alt">
+  <div class="container">
+    <div class="label-tag">Why DeskSentinel AI</div>
+    <h2 class="section-h2 h2-dark">Built Exclusively for UK SMEs, MSPs &amp; Professional Service Firms.</h2>
+    <div class="divider div-cyan"></div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon"><i class="fas fa-shield-virus"></i></div><h4>Predictive, Not Reactive</h4><p>Our models predict the failure risk of a workflow before the sensitive action is executed  not just recording it in a SIEM log after the breach. Pre-fulfilment governance stops attacks before they succeed.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-flag"></i></div><h4>UK-Specific Threat Intelligence</h4><p>Models trained on British IT service sector data, MSP professional standards, NCSC Zero Trust guidelines, and UK corporate communication habits  hyper-localised for the British professional market.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-user-shield"></i></div><h4>Procedural Equity Protection</h4><p>Capture expert-level security workflows as permanent organisational assets  so procedural compliance stays within the firm even after senior staff leave, and junior agents enforce expert-level rules instantly.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-pound-sign"></i></div><h4>SME-Optimised Pricing</h4><p>Tiered SaaS pricing from just £90/month gives UK SMEs the same identity governance intelligence previously reserved for enterprise-level SOC teams with multi-million pound security budgets.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-project-diagram"></i></div><h4>ITSM-Agnostic Architecture</h4><p>Sits as a governance overlay above existing tools  ServiceNow, Jira, Okta, Entra ID  no infrastructure replacement needed. Deep API integration means adoption in hours, not months.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-leaf"></i></div><h4>ESG &amp; NCSC Compliant</h4><p>Audit-ready ICO and NCSC compliance reporting is generated automatically  democratising Procedural Equity across the UK service sector and reducing the carbon overhead of manual verification cycles.</p></div>
+    </div>
+  </div>
+</section>
+</div><!-- /home -->
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<div class="page" id="page-about">
+<section class="about-hero">
+  <div class="container">
+    <div class="label-tag">About DeskSentinel AI</div>
+    <h2 class="section-h2 h2-dark">Transforming Vulnerable Service Desks into Proactive Identity Fortresses.</h2>
+    <div class="divider div-cyan"></div>
+    <p class="para-d" style="max-width:800px">DeskSentinel AI is an AI-based end-to-end Identity Governance and Social Engineering Defence Platform for the UK professional services industry. We solve an urgent operational problem  the "Service-Desk Attack Surface"  where teams are experimenting with digital transformation but failing to govern the human-identity layer, leading to massive financial losses due to account takeovers.</p>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="label-tag">Vision &amp; Mission</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px" class="tw">
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:32px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:12px">Mission</div>
+        <h3 style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:16px">From Reactive Monitoring to Proactive Prevention</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.8">To enable UK professional SMEs to secure their human-identity workflows by using DeskSentinel AI to proactively intercept social engineering, standardise identity verification, and automate compliant refusal responses  ensuring every agent enforces expert-level compliance instantly.</p>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:32px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:12px">Vision</div>
+        <h3 style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:16px">The Global Standard for Service-Desk Identity Governance</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.8">We aspire to be the global standard for "service-desk identity governance," fostering a future in which IT helpdesks operate as proactive security fortresses  immune to coercive identity manipulation and anchored in audit-ready procedural equity.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec-alt">
+  <div class="container">
+    <div class="label-tag">Core Values</div>
+    <h2 class="section-h2 h2-dark">What Drives DeskSentinel AI</h2>
+    <div class="divider div-cyan"></div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon"><i class="fas fa-eye"></i></div><h4>Clarity</h4><p>Championing total transparency in identity verification by utilising AI clarification to decode ambiguous user intent and expose coercive risks in real-time  before any sensitive action is executed.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-sync-alt"></i></div><h4>Consistency</h4><p>Standardising defensible, policy-compliant security decisions through our Refusal Summary Intent engine  ensuring every agent, regardless of experience, makes an audit-ready, safe choice every time.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-balance-scale"></i></div><h4>Procedural Equity</h4><p>Upholding Muhammad Jawad's vision of immutable, fair, and high-standard security that democratises expert-level protection across the entire helpdesk  from junior to the most senior staff.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-crosshairs"></i></div><h4>Vigilance</h4><p>Operating as a proactive security fortress by intercepting coercive social engineering and identity manipulation before it can compromise the human-identity workflow or trigger a costly account takeover.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-file-alt"></i></div><h4>Auditability</h4><p>Building trust through forensic precision  ensuring every intervention, clarification, and refusal is logged with high-fidelity evidence to meet strict NCSC and ICO compliance standards automatically.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-globe"></i></div><h4>ESG Impact</h4><p>Generating audit-ready compliance reports aligned with NCSC Zero Trust and ICO requirements  democratising enterprise-grade identity governance across the UK's entire SME service economy sustainably.</p></div>
+    </div>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="label-tag">Founder Fit</div>
+    <h2 class="section-h2 h2-dark">Meet the Founder</h2>
+    <div class="divider div-cyan"></div>
+    <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:clamp(20px,3vw,36px)">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--electric),var(--navy));display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:24px;font-weight:800;color:#fff;margin-bottom:16px">MJ</div>
+      <h3 style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:4px">Muhammad Jawad</h3>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:16px">Founder &amp; CEO · DeskSentinel AI</div>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.8;max-width:800px">Muhammad Jawad possesses a unique background to establish and grow DeskSentinel AI in the UK, drawing on deep technical experience in software engineering, advanced ServiceNow ITSM integrations, and a solid grasp of the operational security required for zero-trust helpdesk transformation. As a ServiceNow developer at RT TECH Solutions Group, he designed and maintained secure access controls using ACLs and automated workflows  giving him direct exposure to how identity-sensitive requests are handled in high-pressure enterprise environments. His MSc in Cybersecurity from the University of the West of Scotland informs his ability to develop sophisticated threat detection models, ensuring the platform's AI clarification engine is robust enough to parse coercive chat inputs and that the Refusal Summary Intent tool accurately translates those threats into structured, audit-ready compliance logs. He understands the "human-identity layer" not as an abstract risk but as a practical, day-to-day operational reality.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px">
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">MSc Cybersecurity (UWS)</span>
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">ServiceNow Developer</span>
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">ITSM Architecture</span>
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">Zero Trust Expert</span>
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">ReactJS &amp; REST APIs</span>
+        <span style="background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:20px;padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--electric-dim)">SecOps Forensics</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:32px" class="tw">
+      <div style="background:linear-gradient(135deg,var(--navy),var(--navy-deep));border-radius:18px;padding:32px;color:#fff">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(0,212,255,.8);margin-bottom:12px">Exceptional Founder-Market Fit</div>
+        <h3 style="font-family:var(--display);font-size:19px;font-weight:700;margin-bottom:14px">Built by Someone Who Has Lived the Problem</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,.8);line-height:1.8">Jawad has spent years building the very ServiceNow and ITSM workflows that attackers are currently exploiting. Unlike founders who approach cybersecurity purely as a reactive post-breach logging tool, he understands how professional IT helpdesk teams function as the ultimate human-identity perimeter  ensuring the solution is realistic, procedurally governed, and aligned with NCSC compliance goals.</p>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:32px">
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:14px">Validated Pilot Achievements</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-mid)"><span style="color:var(--cyan-dim);font-size:18px">✓</span> 81% of 150 UK MSPs "highly impressed" with AI Clarification prototype accuracy</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-mid)"><span style="color:var(--cyan-dim);font-size:18px">✓</span> 28% increase in legitimate ticket resolution speed across 5 UK pilot firms</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-mid)"><span style="color:var(--cyan-dim);font-size:18px">✓</span> 18% reduction in social-engineering success across 1,200 tested interactions</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-mid)"><span style="color:var(--cyan-dim);font-size:18px">✓</span> Junior agents reach expert-level compliance in 14 days vs historical 45-day average</div>
+          <div style="display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text-mid)"><span style="color:var(--cyan-dim);font-size:18px">✓</span> 91.2% of 182 respondents rate AI Clarification as "valuable" or "extremely valuable"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /about -->
+
+<!-- ═══════════════ PLATFORM ═══════════════ -->
+<div class="page" id="page-platform">
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">The Full Platform</div>
+    <h2 class="section-h2 h2-white">The Pre-Fulfilment Identity Governance Engine</h2>
+    <div class="divider div-white"></div>
+    <p class="para-w" style="max-width:760px">A unified, closed-loop operational platform that converts fragmented helpdesk chat and identity requests into tangible security assets. Unlike existing tools that treat cybersecurity as an isolated, reactive SIEM log or generic chat interface, DeskSentinel AI establishes a continuous lifecycle that links user intent, multi-step verification execution, and identity security outcomes  transforming identity verification from a manual bottleneck into a precise driver of operational security.</p>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="label-tag">Proprietary Innovation</div>
+    <h2 class="section-h2 h2-dark">What Makes DeskSentinel AI Novel</h2>
+    <div class="divider div-cyan"></div>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon"><i class="fas fa-lock"></i></div><h4>Closed-Loop Pre-Fulfilment Lifecycle</h4><p>A first-of-its-kind framework bridging the gap between raw ITSM chat inputs and identity security outcomes  creating a continuous feedback loop that catches manipulation before sensitive actions are executed.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-brain"></i></div><h4>Behavioural Intent Synthesis</h4><p>Merges unstructured natural language intent, automated multi-step verification states, and real-world compliance metrics into a single "behavioural baseline" system that fingerprints normal vs. coercive requests.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-sitemap"></i></div><h4>Verification-State Compliance Graph</h4><p>Raw helpdesk actions are transformed into a proprietary trust-state model that continuously evaluates whether sufficient verified evidence exists before execution  linking AI behavioural scores directly to identity-security consequences.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-cubes"></i></div><h4>ITSM-Agnostic SaaS Architecture</h4><p>Sits as a governance layer above underlying ITSM platforms and IAM tools (ServiceNow, Jira, Okta, Entra ID) without vendor lock-in or infrastructure replacement  plug-and-play from day one.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-network-wired"></i></div><h4>Community Security Network</h4><p>Federated learning architecture enables sharing of anonymised manipulation indicators across UK firms  allowing each SME to leverage collective regional threat intelligence without revealing private corporate data.</p></div>
+      <div class="why-card"><div class="why-icon"><i class="fas fa-balance-scale"></i></div><h4>Integrated Compliance Sovereignty</h4><p>Unlike siloed SIEM or IAM tools, DeskSentinel AI allows businesses to own their "procedural compliance" as a proprietary asset  ensuring expert-level verification knowledge remains enforced even after senior staff leave.</p></div>
+    </div>
+  </div>
+</section>
+<section class="sec-alt">
+  <div class="container">
+    <div class="label-tag">Competitor Analysis</div>
+    <h2 class="section-h2 h2-dark">DeskSentinel AI vs The Market</h2>
+    <div class="divider div-cyan"></div>
+    <p class="para-d" style="max-width:700px;margin-bottom:0">No other solution unifies proactive threat forecasting, real-time AI clarification, behavioural forensics, and outcome-linked identity protection into one modular SaaS platform tailored to the UK SME service desk segment.</p>
+    <div class="comp-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Feature / Capability</th>
+            <th>SIEM &amp; SOAR (Splunk/Sentinel)</th>
+            <th>IAM Leaders (Okta/Entra ID)</th>
+            <th>ITSM Chatbots (ServiceNow)</th>
+            <th class="hi">DeskSentinel AI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Closed-Loop Pre-Fulfilment Governance</td><td class="no">No  post-event logs</td><td class="no">No  siloed auth</td><td class="no">No  ticket routing</td><td class="yes hi">✓ Real-time operational gates</td></tr>
+          <tr><td>Pre-Fulfilment Identity-Risk Scoring</td><td class="no">No  reactive alerts</td><td class="no">No  machine logic only</td><td class="no">No  generic routing</td><td class="yes hi">✓ Behavioural baseline scoring</td></tr>
+          <tr><td>UK-Specific Threat Benchmarking</td><td class="no">No  global data</td><td class="no">No  global data</td><td class="no">No  generic templates</td><td class="yes hi">✓ UK SME service sector focused</td></tr>
+          <tr><td>AI Clarification Engine</td><td class="no">No</td><td class="no">No</td><td class="no">Limited  basic NLP</td><td class="yes hi">✓ Parses coercive chat real-time</td></tr>
+          <tr><td>Refusal Summary Intent Generation</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes hi">✓ Auto-generates structured denials</td></tr>
+          <tr><td>Verification-State Compliance Graph</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes hi">✓ Maps evidence before execution</td></tr>
+          <tr><td>Federated Community Security Network</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="yes hi">✓ Anonymised CSN threat sharing</td></tr>
+          <tr><td>Target Customer Segment</td><td>Global Enterprise SOCs</td><td>Enterprise IT Admins</td><td>Broad IT Operations</td><td class="hi" style="font-weight:700;color:var(--electric-dim)">UK SME Firms &amp; MSPs</td></tr>
+          <tr><td>Cost Structure for SMEs</td><td>High data-ingest fees</td><td>Per-user enterprise</td><td>Seat-based fee</td><td class="hi" style="font-weight:700;color:var(--electric-dim)">SME-optimised SaaS + risk ROI</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</div><!-- /platform -->
+
+<!-- ═══════════════ MARKET ═══════════════ -->
+<div class="page" id="page-market">
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">Market Research &amp; Validation</div>
+    <h2 class="section-h2 h2-white">A $26.77B Global IAM Market  With a Critical UK SME Gap at the Helpdesk Layer.</h2>
+    <div class="divider div-white"></div>
+    <p class="para-w" style="max-width:760px">The global IAM market is valued at approximately USD 26.77 billion in 2025 and is projected to reach USD 62.90 billion by 2033, growing at a CAGR of 11.3%. The UK cybersecurity market is forecast to reach over USD 12.8 billion in 2025. Yet a critical "service-desk attack surface" gap has emerged  where 36% of all cyber incidents now begin with social manipulation, not software exploits. Our market validation survey of 182 UK IT professionals confirms overwhelming demand for a pre-fulfilment identity governance solution.</p>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="label-tag">Market Size &amp; Opportunity</div>
+    <h2 class="section-h2 h2-dark">£51B UK MSP Market. 12,867 Active MSPs. Millions Lost to Social Engineering Daily.</h2>
+    <div class="divider div-cyan"></div>
+    <div class="charts-grid">
+      <div class="chart-card"><h4>High-Risk Helpdesk Workflows Targeted</h4><p>% of social engineering attacks by workflow type  UK survey 182 respondents</p><div class="chart-wrap"><canvas id="chartSector"></canvas></div></div>
+      <div class="chart-card"><h4>Market Pain Points  UK IT Survey (182 Respondents)</h4><p>% of UK IT directors citing critical operational helpdesk vulnerabilities</p><div class="chart-wrap"><canvas id="chartRootCause"></canvas></div></div>
+      <div class="chart-card"><h4>DeskSentinel AI vs Competitors  Capability Radar</h4><p>Key identity governance platform capability comparison across providers</p><div class="chart-wrap"><canvas id="chartRadar"></canvas></div></div>
+      <div class="chart-card"><h4>Global IAM Market Growth &amp; UK Cyber CAGR</h4><p>Market size USD Billions &amp; UK cybersecurity growth rate 2022–2033</p><div class="chart-wrap"><canvas id="chartGrowth"></canvas></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px" class="tw" style="grid-template-columns:repeat(3,1fr)">
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:16px;padding:28px;text-align:center"><div style="font-family:var(--display);font-size:40px;font-weight:800;color:var(--electric);margin-bottom:10px">91.2%</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Of 182 UK respondents describe AI Clarification of coercive helpdesk chat as "valuable" or "extremely valuable"</p></div>
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:16px;padding:28px;text-align:center"><div style="font-family:var(--display);font-size:40px;font-weight:800;color:var(--electric);margin-bottom:10px">88%+</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Consider pre-fulfilment governance and real-time risk scoring important or critical to prevent account takeovers</p></div>
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:16px;padding:28px;text-align:center"><div style="font-family:var(--display);font-size:40px;font-weight:800;color:var(--electric);margin-bottom:10px">87.3%</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Of respondents said they would be interested in joining a pilot or beta testing programme for DeskSentinel AI</p></div>
+    </div>
+  </div>
+</section>
+<section class="sec-alt">
+  <div class="container">
+    <div class="label-tag">Regional Go-To-Market</div>
+    <h2 class="section-h2 h2-dark">Where DeskSentinel AI Launches &amp; Scales</h2>
+    <div class="divider div-cyan"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px" class="tw">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="background:#fff;border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;padding:20px 24px"><h4 style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:6px">London &amp; South East  Year 1 Launch</h4><p style="font-size:13px;color:var(--text-muted);line-height:1.7">Over 70% of all UK data-security businesses are London-based. London MSPs and professional agencies charge premium day rates and cannot afford the devastating reputational and financial damage of a helpdesk-facilitated account takeover  the ideal launchpad for DeskSentinel AI's AI clarification engine.</p></div>
+        <div style="background:#fff;border-left:4px solid var(--electric);border-radius:0 12px 12px 0;padding:20px 24px"><h4 style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:6px">Manchester &amp; Birmingham  Year 2 Expansion</h4><p style="font-size:13px;color:var(--text-muted);line-height:1.7">The North West and West Midlands are rapidly expanding tech and cyber ecosystems. These agile MSPs rely heavily on IT support speed but lack the time or budget to manage enterprise-grade SOCs  making DeskSentinel AI their ideal governance layer at an SME-friendly price point.</p></div>
+        <div style="background:#fff;border-left:4px solid var(--navy-mid);border-radius:0 12px 12px 0;padding:20px 24px"><h4 style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:6px">Scotland, Wales &amp; Northern Ireland  Year 3</h4><p style="font-size:13px;color:var(--text-muted);line-height:1.7">Huge opportunity for the Community Security Network (CSN) to help regional companies cross the geographical "security divide"  ensuring smaller operators access the same threat intelligence as top-tier agencies despite lower density.</p></div>
+      </div>
+      <div style="background:#fff;border:1px solid rgba(10,22,40,.12);border-radius:18px;padding:28px">
+        <div class="label-tag">UK Cyber &amp; IT Sector Forecast 2025–2026</div>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-top:8px">
+          <div style="padding:16px;background:var(--bg-light);border-radius:10px"><div style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:4px">10.5–11.4% Cybersecurity CAGR Through 2031</div><p style="font-size:13px;color:var(--text-muted)">UK cybersecurity market growing rapidly, driven by zero-trust adoption and SME demand for proactive threat-prevention tools</p></div>
+          <div style="padding:16px;background:var(--bg-light);border-radius:10px"><div style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:4px">343,700 Jobs Across 12,867 Active UK MSPs</div><p style="font-size:13px;color:var(--text-muted)">A highly fragmented, high-volume market generating £51B revenue  where even marginal verification improvements unlock massive economic value</p></div>
+          <div style="padding:16px;background:var(--bg-light);border-radius:10px"><div style="font-family:var(--display);font-weight:700;color:var(--text-dark);margin-bottom:4px">Stabilising Inflation  1.9% Expected in 2026</div><p style="font-size:13px;color:var(--text-muted)">Allowing more predictable capital expenditure on SaaS security subscriptions  ideal conditions for DeskSentinel AI's tiered pricing model</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /market -->
+
+<!-- ═══════════════ PROCESS ═══════════════ -->
+<div class="page" id="page-process">
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">How It Works</div>
+    <h2 class="section-h2 h2-white">From Raw Helpdesk Chat to Proactive Identity Fortress</h2>
+    <div class="divider div-white"></div>
+    <p class="para-w" style="max-width:700px">A four-phase R&amp;D-validated process that transforms unpredictable social engineering vulnerabilities into permanent, organisational "Procedural Equity"  the competitive advantage that stays within your firm even after senior staff leave.</p>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="process-step">
+      <div>
+        <div class="step-num">Phase 01 · Capture</div>
+        <h3 class="step-h3">Pre-Fulfilment Risk Scoring &amp; Behavioural Baselining</h3>
+        <p class="step-p">Deploy the Pre-Fulfilment Identity-Risk Scoring Engine to capture the behavioural baseline of normal user requests and score live interactions for manipulation before sensitive actions are executed. The system uses real-time ticket and chat data to pinpoint the precise "manipulation indicators" of social-engineering attacks  urgency tone, executive impersonation, avoidance of callbacks  correlated with the requested workflow across entire teams.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="badge badge-c"><span class="bdot"></span>ML Risk Scoring</span><span class="badge badge-c"><span class="bdot"></span>Behavioural Baseline</span><span class="badge badge-g"><span class="bdot"></span>Zero Lock-In</span></div>
+      </div>
+      <div class="step-img"><img src="D7.jpg" alt="Risk Scoring"></div>
+    </div>
+    <div class="process-step">
+      <div class="step-img"><img src="D8.jpg" alt="AI Clarification"></div>
+      <div>
+        <div class="step-num">Phase 02 · Clarify</div>
+        <h3 class="step-h3">AI Clarification &amp; Coercive Intent Detection</h3>
+        <p class="step-p">The AI Clarification Engine automatically parses unstructured, coercive, or urgent helpdesk communication in real-time  distinguishing between routine IT issues and sophisticated social-engineering tactics such as vishing, impersonation, or urgency pressure. When a threat actor uses Scattered Spider-style tactics to request an urgent MFA reset, DeskSentinel AI immediately detects the coercive logic and restricts the workflow, ensuring junior agents enforce expert-level compliance instantly  eliminating manual trial-and-error under pressure.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="badge badge-c"><span class="bdot"></span>NLP Coercion Detection</span><span class="badge badge-c"><span class="bdot"></span>Vishing Detection</span><span class="badge badge-g"><span class="bdot"></span>Real-Time</span></div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div>
+        <div class="step-num">Phase 03 · Govern</div>
+        <h3 class="step-h3">Refusal Summary Intent &amp; Verification-State Compliance</h3>
+        <p class="step-p">Complex identity requests are automatically deconstructed into structured, multi-step verification workflows  removing the vulnerability of manual trial-and-error verification under pressure. The Refusal Summary Intent engine auto-generates structured, actionable, and policy-compliant refusal summaries, empowering agents to professionally and securely deny unauthorised access requests. The Verification-State Compliance Graph identifies exactly where a workflow breaks down and what evidence is missing before execution.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="badge badge-c"><span class="bdot"></span>Auto Refusal Summaries</span><span class="badge badge-c"><span class="bdot"></span>Compliance Graph</span><span class="badge badge-g"><span class="bdot"></span>50%+ Time Saved</span></div>
+      </div>
+      <div class="step-img"><img src="D9.jpg" alt="Refusal Summary"></div>
+    </div>
+    <div class="process-step">
+      <div class="step-img"><img src="D10.jpg" alt="Forensic Dashboards"></div>
+      <div>
+        <div class="step-num">Phase 04 · Equity</div>
+        <h3 class="step-h3">Forensic Evidence Logging &amp; Procedural Equity Dashboards</h3>
+        <p class="step-p">The Forensic Evidence Logger generates comprehensive dashboards linking specific DeskSentinel AI interventions to prevented financial loss and mitigated breach risks. Procedural Equity continuously adapts  every successful refusal "teaches" the system to refine future risk accuracy, building permanent organisational identity-security logic that survives staff turnover. Compliance reporting meets ICO and NCSC Zero Trust requirements with full audit trails for every interaction, automatically.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px"><span class="badge badge-c"><span class="bdot"></span>Forensic Dashboards</span><span class="badge badge-c"><span class="bdot"></span>ICO/NCSC Compliant</span><span class="badge badge-g"><span class="bdot"></span>100% Audit Accuracy</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /process -->
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<div class="page" id="page-faq">
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">Frequently Asked Questions</div>
+    <h2 class="section-h2 h2-white">Everything You Need to Know About DeskSentinel AI</h2>
+    <div class="divider div-white"></div>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container" style="max-width:860px">
+    <div class="faq-wrap">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>What exactly is the "Service-Desk Attack Surface" that DeskSentinel AI addresses?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">The "Service-Desk Attack Surface" is the critical operational gap between technical security adoption and human-mediated operational vulnerability. While 80%+ of UK businesses have adopted Zero Trust, threat actors  using sophisticated techniques like vishing (voice phishing) and MFA bypass, exemplified by the Scattered Spider group  manipulate helpdesk agents into authorising unauthorised identity changes. DeskSentinel AI bridges this gap by intercepting these coercive interactions before any breach occurs, using AI clarification to decode manipulative requests and pre-fulfilment governance to block unauthorised actions before they are executed.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>How does DeskSentinel AI integrate with our existing IT systems?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">DeskSentinel AI is built with an "ITSM-Agnostic" philosophy  our plug-and-play API platform connects seamlessly with dominant UK business tools including ServiceNow, Jira Service Management, Microsoft Entra ID, and Okta. This minimises onboarding friction and creates deep integration without complex data migration or infrastructure lock-in. Public APIs enable connections to the UK's dominant identity and professional toolsets, reducing onboarding time from weeks to hours once initial integrations are established at a pilot firm. The platform sits as a governance layer above your existing tools  not a replacement for them.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>What is "Procedural Equity" and why is it important for UK SMEs?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">Procedural Equity is the proprietary framework by which DeskSentinel AI captures, standardises, and permanently encodes expert-level security verification logic as an organisational asset. Unlike static procedural documents kept by individual senior staff, DeskSentinel AI allows firms to own their "Identity Verification Logic" indefinitely. This means that even when senior IT staff leave, the expert-level compliance rules remain embedded in the platform  instantly accessible to junior agents. It eliminates the "security loss" caused by high staff turnover in UK service desks and ensures consistent, defensible identity decisions across every agent and shift.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>How accurate are the risk predictions and refusal recommendations?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">Our pilot validation demonstrated strong early performance: 81% of 150 UK MSPs rated the AI Clarification insights as "highly impressive." Pilot deployments across 5 UK professional services and MSP locations showed a 28% average increase in legitimate ticket resolution speed, an 18% reduction in social-engineering success and unauthorised resets across 1,200 tested interactions, and new junior hires reaching expert-level procedural compliance within 14 days vs. a historical mean of 45 days. 91.2% of 182 respondents described AI Clarification as "valuable" or "extremely valuable," and 89.9% want automated pre-fulfilment risk scoring as standard.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>How does the platform help with UK regulatory compliance (NCSC, ICO, GDPR)?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">DeskSentinel AI is strategically designed to align with the UK's evolving AI and cybersecurity regulatory landscape, specifically the NCSC's Zero Trust guidelines and the ICO's requirements on data privacy and identity verification. The platform enables businesses to track, measure, and audit every identity-verification interaction with high-fidelity logs and verifiable procedural chains via the Forensic Evidence Logger. By utilising AI Clarification capabilities, firms can detect manipulative social-engineering risks and automatically generate structured Refusal Summary Intents before unauthorised account takeovers occur  providing a robust, audit-ready trail for regulatory enquiries and ICO compliance audits.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>Is sensitive helpdesk data secure? How does the Community Security Network (CSN) work?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">DeskSentinel AI maintains strict adherence to UK GDPR, ICO data protection guidance, and NCSC Zero Trust guidelines. The Community Security Network (CSN) uses federated learning architecture  enabling anonymised "manipulation indicators" from UK service firms to continuously improve predictive models without sharing sensitive corporate or client data. Helpdesk interaction data is processed by secure cloud-native identity nodes with end-to-end encryption, following UK Cyber Essentials standards. Privacy-by-Design and Ethics-by-Design principles are applied throughout the platform architecture from day one, and all data entering the CSN is fully anonymised before sharing.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>What pricing plans are available and who are they designed for?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">DeskSentinel AI offers three SaaS subscription tiers: Identity Core at £90/month for boutique MSPs and small support teams (basic request risk scoring, ticket tracking, API connectors, and procedural compliance dashboards); Defence Architect at £370/month for high-volume MSPs and mid-market professional agencies (pre-fulfilment identity-risk scoring, automated Refusal Summary Intent generation, AI clarification, and ServiceNow/Okta sync); and Security Sovereign at £240/month for multi-site agencies and corporate support operations (custom forensic alerts, secure identity nodes, and CSN threat intelligence access). One-off fees include £480 for Defence Onboarding &amp; API Sync setup and £520 for a Forensic Security Assessment.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFAQ(this)"><h4>What are the growth plans for DeskSentinel AI?</h4><span class="faq-icon">+</span></div>
+        <div class="faq-body">Year 1 focuses on IT MSPs and professional service helpdesks in London (5–10 pilot sites). Year 2 expands to 50–100 MSPs and professional agencies across Manchester, Birmingham, and the South East with plug-and-play connectivity to major UK business ecosystems. Year 3 enters all UK regions and initiates EU pilot programmes in Berlin, Paris, and Amsterdam. By Years 4–5, the platform targets 500+ agencies and professional IT support teams worldwide, ultimately creating over 20 high-value UK-based jobs and establishing DeskSentinel AI as the global standard for pre-fulfilment identity governance and service desk security consistency.</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /faq -->
+
+<!-- ═══════════════ PRICING ═══════════════ -->
+<div class="page" id="page-pricing">
+<section class="sec-dark">
+  <div class="container">
+    <div class="label-tag-w">Pricing &amp; Plans</div>
+    <h2 class="section-h2 h2-white">SME-Optimised. Identity-Protecting. Pre-Fulfilment-as-a-Service.</h2>
+    <div class="divider div-white"></div>
+    <p class="para-w" style="max-width:700px">Tiered pricing designed to provide accessibility for boutique MSPs while scaling to full AI-enabled behavioural baselining and cross-ticket pattern linking for multi-site corporate support operations  starting at just £90/month.</p>
+  </div>
+</section>
+<section class="sec-light">
+  <div class="container">
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Starter Plan</div>
+        <div class="price-title">Identity Core</div>
+        <div class="price-amount">£90<span>/month</span></div>
+        <div class="price-desc">For boutique MSPs and small support teams taking their first step into AI-driven identity risk governance.</div>
+        <ul class="price-feat">
+          <li>Basic request risk scoring</li>
+          <li>Ticket tracking &amp; archiving</li>
+          <li>API connectors (ServiceNow/Jira)</li>
+          <li>Procedural compliance dashboards</li>
+          <li>Email alerts for high-risk identity requests</li>
+          <li>Monthly forensic security report</li>
+          <li>UK GDPR compliant data processing</li>
+        </ul>
+        <button class="btn-s" onclick="showPage('contact')" style="width:100%;justify-content:center">Get Started</button>
+      </div>
+      <div class="price-card featured">
+        <div class="feat-lbl">Most Popular</div>
+        <div class="price-tier">Professional Plan</div>
+        <div class="price-title">Defence Architect</div>
+        <div class="price-amount">£370<span>/month</span></div>
+        <div class="price-desc">For high-volume MSPs and mid-market professional agencies requiring full pre-fulfilment identity governance.</div>
+        <ul class="price-feat">
+          <li>Advanced pre-fulfilment identity-risk scoring</li>
+          <li>Automated Refusal Summary Intent generation</li>
+          <li>AI Clarification of coercive chat in real-time</li>
+          <li>ServiceNow, Okta &amp; Entra ID sync</li>
+          <li>Verification-State Compliance Graph</li>
+          <li>Behavioural baseline fingerprinting</li>
+          <li>NCSC/ICO compliance reporting</li>
+          <li>Real-time forensic alert dashboard</li>
+        </ul>
+        <button class="btn-p" onclick="showPage('contact')" style="width:100%;justify-content:center">Start Free Trial</button>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Enterprise Plan</div>
+        <div class="price-title">Security Sovereign</div>
+        <div class="price-amount">£240<span>/month</span></div>
+        <div class="price-desc">For multi-site agencies and corporate support operations requiring complete forensic identity intelligence and CSN access.</div>
+        <ul class="price-feat">
+          <li>Custom manipulation forensics engine</li>
+          <li>Secure "Identity Nodes" (multi-site)</li>
+          <li>Community Security Network (CSN) access</li>
+          <li>Federated threat benchmarking</li>
+          <li>Dedicated SecOps success manager</li>
+          <li>Advanced Procedural Equity reporting</li>
+          <li>API licensing for custom IAM systems</li>
+          <li>Priority 24/7 technical support</li>
+        </ul>
+        <button class="btn-s" onclick="showPage('contact')" style="width:100%;justify-content:center">Contact Sales</button>
+      </div>
+    </div>
+    <div style="margin-top:56px">
+      <div class="label-tag">Professional Add-Ons</div>
+      <h3 style="font-family:var(--display);font-size:26px;font-weight:700;color:var(--text-dark);margin-bottom:28px">Additional Services</h3>
+      <div class="addons-grid">
+        <div class="addon-card"><div class="addon-icon"><i class="fas fa-plug"></i></div><div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:6px">One-off Fee</div><h4>Defence Onboarding &amp; API Sync  £480/firm</h4><p>One-time environment calibration, IAM/ITSM API bridge configuration, and secure identity node deployment  ensuring your platform is fully integrated with ServiceNow, Jira, Okta, and Entra ID from day one with zero disruption to existing workflows.</p></div></div>
+        <div class="addon-card"><div class="addon-icon"><i class="fas fa-stethoscope"></i></div><div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:6px">One-off Fee</div><h4>Forensic Security Assessment  £520/session</h4><p>Custom procedural compliance audit of legacy helpdesk tickets and team-wide "Pre-Fulfilment" security training  performed by certified SecOps engineers for complex multi-team MSP environments requiring deep forensic analysis.</p></div></div>
+        <div class="addon-card"><div class="addon-icon"><i class="fas fa-chart-bar"></i></div><div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--electric-dim);margin-bottom:6px">Annual Subscription</div><h4>Premium CSN Threat Reports  Custom Pricing</h4><p>Advanced sector benchmarking and "Procedural Equity" growth insights via the Community Security Network  essential for multi-site MSPs requiring strategic identity-risk scaling and breach prevention reporting across regions.</p></div></div>
+        <div style="background:linear-gradient(135deg,var(--navy),var(--navy-deep));border-radius:16px;padding:28px;display:flex;gap:20px"><div style="width:52px;height:52px;border-radius:12px;background:rgba(0,212,255,.15);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:22px;flex-shrink:0;border:1px solid rgba(0,212,255,.3)"><i class="fas fa-handshake"></i></div><div><div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(0,212,255,.8);margin-bottom:6px">Pilot Programme</div><h4 style="font-family:var(--display);font-size:16px;font-weight:700;color:#fff;margin-bottom:6px">8-Week UK Pilot  Tailored Pricing</h4><p style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.7">Join our current cohort of London and UK-wide MSPs for a fully supported 8-week pilot deployment  with direct access to the DeskSentinel AI founding team and Muhammad Jawad's personal technical guidance.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /pricing -->
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<div class="page" id="page-contact">
+<section class="contact-hero">
+  <div class="container">
+
+    <div class="label-tag-w">Get in Touch</div>
+    <h2 class="section-h2 h2-white">Request a Demo or Join the UK Pilot Programme</h2>
+    <div class="divider div-white"></div>
+
+    <div class="contact-wrap">
+
+      <!-- CONTACT FORM -->
+      <div class="contact-form">
+
+        <h3 style="font-family:var(--display);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:6px">
+          Book Your Platform Demo
+        </h3>
+
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:24px;line-height:1.7">
+          Fill in your details and our team will contact you within 24 hours to schedule a live demonstration of the DeskSentinel AI platform.
+        </p>
+
+        <form action="https://api.web3forms.com/submit" method="POST">
+
+          <input type="hidden" name="access_key" value="7351bb12-7ffe-4d57-bd07-84ca10fc4996">
+          <input type="hidden" name="subject" value="New DeskSentinel AI Demo Request">
+          <input type="hidden" name="from_name" value="DeskSentinel AI Website">
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Business Email</label>
+            <input type="email" name="email" placeholder="you@yourcompany.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Company / MSP Name</label>
+            <input type="text" name="company" placeholder="Your company or MSP name">
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" name="phone" placeholder="+44 7XXX XXX XXX">
+          </div>
+
+          <div class="form-group">
+            <label>Number of Helpdesk Agents</label>
+            <select name="agents">
+              <option>1–5 agents (boutique MSP)</option>
+              <option>6–20 agents</option>
+              <option>21–50 agents</option>
+              <option>51–200 agents</option>
+              <option>200+ agents</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Your Biggest Identity Security Challenge</label>
+            <textarea
+              name="message"
+              rows="5"
+              placeholder="Tell us about your current helpdesk vulnerabilities, vishing attempts, MFA bypass risks, manual verification bottlenecks, or compliance concerns..."
+              required></textarea>
+          </div>
+
+          <button type="submit" class="btn-p" style="width:100%;justify-content:center;margin-top:10px">
+            Send Demo Request
+            <i class="fas fa-arrow-right" style="margin-left:6px"></i>
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- CONTACT INFO -->
+      <div class="contact-info">
+
+        <h3>DeskSentinel AI</h3>
+
+        <div class="sub">
+          Detect. Clarify. Secure. Transforming vulnerable service desks into proactive identity fortresses.
+          UK's AI-driven Identity Governance & Social Engineering Defence Platform for SMEs, MSPs, and professional service firms.
+        </div>
+
+        <div class="c-detail">
+          <div class="ic"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <strong>Headquarters</strong>
+            <span>London, United Kingdom</span>
+          </div>
+        </div>
+
+        <div class="c-detail">
+          <div class="ic"><i class="fas fa-globe"></i></div>
+          <div>
+            <strong>Website</strong>
+            <span>desksentinelai.com</span>
+          </div>
+        </div>
+
+        <div class="c-detail">
+          <div class="ic"><i class="fas fa-user-tie"></i></div>
+          <div>
+            <strong>Founder & CEO</strong>
+            <span>Muhammad Jawad · MSc Cybersecurity (UWS)</span>
+          </div>
+        </div>
+
+        <div class="c-detail">
+          <div class="ic"><i class="fas fa-calendar-check"></i></div>
+          <div>
+            <strong>Pilot Programme</strong>
+            <span>Recruiting UK MSPs and professional service firms for 8-week Pre-Fulfilment Identity Governance pilot deployments</span>
+          </div>
+        </div>
+
+        <div style="margin-top:28px;padding:20px;background:rgba(0,212,255,.08);border-radius:16px;border:1px solid rgba(0,212,255,.22)">
+
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#00D4FF;margin-bottom:14px">
+            Pilot Performance Metrics
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+
+            <div style="display:flex;justify-content:space-between;font-size:14px;color:rgba(255,255,255,.82)">
+              <span>Ticket resolution speed increase</span>
+              <strong style="color:#00D4FF">+28%</strong>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;font-size:14px;color:rgba(255,255,255,.82)">
+              <span>Social engineering success reduction</span>
+              <strong style="color:#00D4FF">-18%</strong>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;font-size:14px;color:rgba(255,255,255,.82)">
+              <span>Junior agent compliance onboarding</span>
+              <strong style="color:#00D4FF">14 days</strong>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;font-size:14px;color:rgba(255,255,255,.82)">
+              <span>Productivity visibility improvement</span>
+              <strong style="color:#00D4FF">90%+</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <!-- /contact-info -->
+
+    </div>
+  </div>
+</section>
+</div>
+<!-- /contact -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="f-brand">DeskSentinel AI</div>
+        <div class="f-desc">The UK's AI-powered Identity Governance &amp; Social Engineering Defence Platform  intercepting coercive manipulation before it happens, preventing account takeovers, and building permanent "Procedural Equity" for UK MSPs and professional service firms.<br><br><em style="color:rgba(0,212,255,.7);font-style:normal">"We empower organisations with AI-driven intelligence to build secure, productive and high-performing workplaces."  Muhammad Jawad, Founder &amp; CEO</em></div>
+        <div class="f-badges">
+          <span class="f-badge">AI-Powered</span><span class="f-badge">Pre-Fulfilment Governance</span><span class="f-badge">Cloud SaaS</span><span class="f-badge">UK GDPR Compliant</span><span class="f-badge">NCSC Zero Trust Ready</span><span class="f-badge">ESG Aligned</span>
+        </div>
+      </div>
+      <div>
+        <div class="f-col-title">Platform</div>
+        <div class="f-col">
+          <a onclick="showPage('platform')">Pre-Fulfilment Risk Scoring</a>
+          <a onclick="showPage('platform')">AI Clarification Engine</a>
+          <a onclick="showPage('platform')">Refusal Summary Intent</a>
+          <a onclick="showPage('platform')">Verification-State Graph</a>
+          <a onclick="showPage('platform')">Community Security Network</a>
+          <a onclick="showPage('platform')">ITSM Integration Suite</a>
+        </div>
+      </div>
+      <div>
+        <div class="f-col-title">Company</div>
+        <div class="f-col">
+          <a onclick="showPage('about')">About DeskSentinel AI</a>
+          <a onclick="showPage('about')">Muhammad Jawad · Founder</a>
+          <a onclick="showPage('process')">How It Works</a>
+          <a onclick="showPage('faq')">FAQ</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('contact')">Request a Demo</a>
+        </div>
+      </div>
+      <div>
+        <div class="f-col-title">Solutions</div>
+        <div class="f-col">
+          <a onclick="showPage('platform')">IT Managed Service Providers</a>
+          <a onclick="showPage('platform')">Financial &amp; Legal Services</a>
+          <a onclick="showPage('platform')">Healthcare IT Support</a>
+          <a onclick="showPage('platform')">Higher Education IT</a>
+          <a onclick="showPage('pricing')">Identity Core · £90/mo</a>
+          <a onclick="showPage('pricing')">Defence Architect · £370/mo</a>
+          <a onclick="showPage('pricing')">Security Sovereign · £240/mo</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <p>© 2026 <span>DeskSentinel AI</span> · London, UK · UK GDPR Compliant · desksentinelai.com · Founded by Muhammad Jawad</p>
+      <div class="footer-links">
+        <a onclick="showPage('contact')">Privacy Policy</a>
+        <a onclick="showPage('contact')">Terms of Service</a>
+        <a onclick="showPage('contact')">NCSC Compliance</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function showPage(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+n);
+  if(pg)pg.classList.add('active');
+  const bt=document.getElementById('nav-'+n);
+  if(bt)bt.classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(n==='market'&&!window._charts){initCharts();window._charts=true;}
+}
+function toggleCard(btn){
+  const c=btn.closest('.plat-card');
+  c.classList.toggle('open');
+  btn.innerHTML=c.classList.contains('open')?'Show Less':'Learn More';
+}
+function toggleFAQ(el){el.parentElement.classList.toggle('open');}
+function closeMob(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+function handleSubmit(e){
+  e.preventDefault();
+  const b=e.target.querySelector('button[type="submit"]');
+  b.innerHTML='<i class="fas fa-check"></i> Demo Request Sent!';
+  b.style.background='linear-gradient(135deg,#00E5A0,#00A873)';
+  b.disabled=true;
+  setTimeout(()=>{b.innerHTML='Send Demo Request <i class="fas fa-arrow-right" style="margin-left:6px"></i>';b.style.background='';b.disabled=false;e.target.reset();},3500);
+}
+const C='rgba(0,212,255,.85)',C2='rgba(0,212,255,.4)',E='rgba(26,107,255,.85)',E2='rgba(26,107,255,.45)',G='rgba(0,229,160,.8)',GR='rgba(10,22,40,.06)',MT='rgba(29,48,85,.85)';
+Chart.defaults.font.family="'IBM Plex Mono',monospace";Chart.defaults.font.size=11;Chart.defaults.color=MT;
+function initCharts(){
+  new Chart(document.getElementById('chartSector'),{type:'bar',data:{labels:['MFA Resets','Password Recovery','Privileged Access','Contact Changes','Account Unlocks'],datasets:[{label:'Attack Share (%)',data:[26,19.2,15.8,12,10],backgroundColor:[C,E,C2,E2,G],borderRadius:6,barPercentage:.6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:GR},ticks:{callback:v=>v+'%'}}}}});
+  new Chart(document.getElementById('chartRootCause'),{type:'doughnut',data:{labels:['AI Clarification Valuable (91.2%)','Pre-Fulfilment Scoring Critical (88%+)','Refusal Summary Intent Useful (85.2%)','Compliance Graph Useful (83%)','Willing to Join Pilot (87.3%)'],datasets:[{data:[91.2,88,85.2,83,87.3],backgroundColor:[C,E,G,C2,E2],borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8,font:{size:9}}}}}});
+  new Chart(document.getElementById('chartRadar'),{type:'radar',data:{labels:['Pre-Fulfilment Gov.','AI Clarification','Refusal Intent','UK Threat Data','Federated CSN','SME Pricing'],datasets:[{label:'DeskSentinel AI',data:[5,5,5,5,5,5],backgroundColor:'rgba(0,212,255,.08)',borderColor:C,borderWidth:2,pointBackgroundColor:C},{label:'Splunk/Sentinel',data:[1,1,1,1,1,2],backgroundColor:'rgba(26,107,255,.04)',borderColor:E2,borderWidth:1.5,pointBackgroundColor:E2},{label:'Okta/Entra ID',data:[1,2,1,1,1,2],backgroundColor:'rgba(10,22,40,.03)',borderColor:'rgba(10,22,40,.4)',borderWidth:1.5,pointBackgroundColor:'rgba(10,22,40,.4)'},{label:'ServiceNow/Jira',data:[1,2,1,1,1,3],backgroundColor:'rgba(0,229,160,.04)',borderColor:'rgba(0,229,160,.5)',borderWidth:1.5,pointBackgroundColor:'rgba(0,229,160,.5)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,font:{size:9}}}},scales:{r:{grid:{color:GR},pointLabels:{font:{size:10}},ticks:{display:false},min:0,max:5}}}});
+  new Chart(document.getElementById('chartGrowth'),{type:'bar',data:{labels:['2022','2023','2024','2025','2026','2027','2029','2033'],datasets:[{label:'Global IAM Market (USD B)',data:[18,21,24,26.77,30,34,45,62.9],backgroundColor:E,borderRadius:5,barPercentage:.55},{type:'line',label:'UK Cyber CAGR %',data:[null,8,9,10.5,11,11.4,11.4,11.4],borderColor:C,borderWidth:2,yAxisID:'y2',tension:.4,pointBackgroundColor:C,fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:10,font:{size:10}}}},scales:{x:{grid:{color:GR}},y:{grid:{color:GR},ticks:{callback:v=>'$'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{callback:v=>v+'%'}}}}});
+}
+</script>
+</body>
+</html>
